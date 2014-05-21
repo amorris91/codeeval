@@ -32,13 +32,13 @@ void fb(int first, int second, int range) {
 }
 
 void parse_line(char *input) {
-  int arg1, arg2, arg3;
-  int arg_start, arg_end;
   char *arg_string;
+  int arg_start, arg_end;
+  int arg1, arg2, arg3;
   int i, j;
 
   i = 0;
-
+  /* printf("%s", input); */
   while(input[i] == ' ') {
     ++i;
   }
@@ -48,8 +48,7 @@ void parse_line(char *input) {
   }
   arg_end = i;
   arg_string = malloc((arg_end - arg_start + 1) * sizeof(char));
-  j = arg_start;
-  for(j; j <= arg_end; ++j) {
+  for(j = arg_start; j <= arg_end; ++j) {
     arg_string[j - arg_start] = input[j];
   }
   arg_string[j] = '\0';
@@ -65,8 +64,7 @@ void parse_line(char *input) {
   }
   arg_end = i;
   arg_string = malloc((arg_end - arg_start + 1) * sizeof(char));
-  j = arg_start;
-  for(j; j <= arg_end; ++j) {
+  for(j = arg_start; j <= arg_end; ++j) {
     arg_string[j - arg_start] = input[j];
   }
   arg_string[j] = '\0';
@@ -77,13 +75,12 @@ void parse_line(char *input) {
     ++i;
   }
   arg_start = i;
-  while(input[i] != ' ' && input[i] != '\n') {
+  while(input[i] != ' ' && input[i] != '\n' && input[i] != '\0') {
     ++i;
   }
   arg_end = i;
   arg_string = malloc((arg_end - arg_start + 1) * sizeof(char));
-  j = arg_start;
-  for(j; j <= arg_end; ++j) {
+  for(j = arg_start; j <= arg_end; ++j) {
     arg_string[j - arg_start] = input[j];
   }
   arg_string[j] = '\0';
@@ -96,9 +93,9 @@ void parse_line(char *input) {
 int main(int argc, char *argv[]) {
   int fd;
   int file_size;
+  char *file_text;
   int i, j;
   int line_start, line_end;  
-  char *file_text;
   char *individual_line;
 
   /* opening input file */
@@ -116,24 +113,18 @@ int main(int argc, char *argv[]) {
   file_text = malloc(file_size * sizeof(char));
   read(fd, file_text, file_size);
 
-  i = 0;
-  line_start = i;
-  for(i; i < file_size; ++i) {
+  line_start = 0;
+  for(i = 0; i < file_size; ++i) {
     if(file_text[i] == '\n') {
       line_end = i;
-      individual_line = malloc((line_end - line_start + 1) * sizeof(char));
-
-      j = line_start;
-      for(j; j <= line_end; ++j) {
+      individual_line = malloc(line_end - line_start + 2);
+      for(j = line_start; j <= line_end; ++j) {
         individual_line[j - line_start] = file_text[j];
       }
-      individual_line[j] = '\0';
-
-      if(i != file_size - 2) {
-        parse_line(individual_line);
-        line_start = i + 1;
-      }
+      individual_line[j - line_start] = '\0';
+      parse_line(individual_line);
       free(individual_line);
+      line_start = i + 1;
     }
   }
 
