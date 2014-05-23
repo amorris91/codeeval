@@ -1,21 +1,17 @@
 #include <stdio.h>
 
-int fib(int val) {
-  int curr, prev;
-  int i;
-  curr = 0;
-  prev = 1;
-  for(i = 0; i < val; ++i) {
-    curr = curr + prev;
-    prev = curr - prev;
+int sum_digits(int val) {
+  int sum = 0;
+  while(val != 0) {
+    sum += val % 10;
+    val /= 10;
   }
-  return curr;
+  return sum;
 }
 
 int main(int argc, char *argv[]) {
-  int val;
   FILE *fp;
-
+  int val;
   if(argc == 1) {
     printf("No input provided\n");
     return 0;
@@ -25,12 +21,10 @@ int main(int argc, char *argv[]) {
     printf("Unable to open %s\n", argv[1]);
     return 0;
   }
+  fscanf(fp, "%d", &val);
   while(!feof(fp)) {
-    if(fscanf(fp, "%d", &val) != 1) {
-      break;
-    }
-    printf("%d\n", fib(val));
+    printf("%d\n", sum_digits(val));
+    fscanf(fp, "%d", &val);
   }
   fclose(fp);
-  return 0;
 }
